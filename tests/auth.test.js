@@ -10,15 +10,18 @@ describe("Authentication Controller", () => {
 
   it("should register a user and return a token in English", async () => {
     const response = await request(app)
-      .post("/register") // Adjust the route as necessary
-      .set("Accept-Language", "en") // Set the language to English
+      .post("/register")
       .send({
         username: "testuser",
         email: "test@example.com",
         password: "password123",
         language: "en",
+      })
+      .catch((err) => {
+        console.error(err); // Log the error for debugging
       });
 
+    console.log(response.body); // Log the response body for debugging
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty("token");
   });

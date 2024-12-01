@@ -3,6 +3,7 @@ const path = require("path");
 const { fileQueue } = require("../services/fileQueue.js");
 
 exports.upload = async (req, res) => {
+  console.log(req.file);
   try {
     const { file } = req;
     if (!file) {
@@ -89,7 +90,22 @@ exports.uploadFile = async (req, res) => {
       });
     }
 
-    // Add your file upload logic here
+    const file = req.files.file;
+    const uploadPath = path.join(__dirname, "..", "uploads", file.name);
+    file.mv(uploadPath, async (err) => {
+      if (err) {
+        return res.status(500).json({
+          message: req.t("errors.fileUpload", { error: err.message }),
+        });
+      }
+      const newFile = new File({
+        path: file.name,
+        originalname: file.originalname,
+        user: req.user._id,
+      });
+      await newFile.save();
+      res.status(201).json({ _id: newFile._id, filename: file.originalname });
+    });
 
     res.status(200).json({
       message: req.t("fileUploadSuccess"),
