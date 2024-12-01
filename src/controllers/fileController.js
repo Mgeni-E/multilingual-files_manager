@@ -5,6 +5,10 @@ const { fileQueue } = require("../services/fileQueue.js");
 exports.upload = async (req, res) => {
   try {
     const { file } = req;
+    if (!file) {
+      return res.status(400).json({ message: req.t("fileUploadError") });
+    }
+
     const { language } = req.user;
 
     // Create a new file record
@@ -25,9 +29,7 @@ exports.upload = async (req, res) => {
 
     res.status(201).json(newFile);
   } catch (error) {
-    res
-      .status(400)
-      .json({ message: req.t("errors.fileUpload", { error: error.message }) });
+    res.status(400).json({ message: req.t("fileUploadError") });
   }
 };
 

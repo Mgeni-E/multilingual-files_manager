@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../src/app"); // Adjust the path to your Express app
+const app = require("../src/app.js"); // Adjust the path to your Express app
 const User = require("../src/models/User.js");
 
 describe("Authentication Controller", () => {
